@@ -72,7 +72,7 @@ class ResourceMapImpl implements ResourceMap {
             }
             String value = bundle.getString(key);
             if (!StringUtils.isBlank(value)) {
-                return converter.convert(value.trim());
+                return converter.convert(evaluateStringExpression(value.trim()));
             }
         }
         return null;
@@ -86,7 +86,6 @@ class ResourceMapImpl implements ResourceMap {
     @Override
     public final String getString(String key, Object... args) {
         String value = getObject(key, String.class);
-        //TODO: variable lookup
         return String.format(value, args);
     }
 
@@ -134,5 +133,49 @@ class ResourceMapImpl implements ResourceMap {
     public final Integer getKeyCode(String key) {
         KeyStroke stroke = getKeyStroke(key);
         return stroke != null ? stroke.getKeyCode() : null;
+    }
+
+    /* Given the following resources:
+    *
+    * hello = Hello
+    * world = World
+    * place = ${world}
+    *
+    * The value of evaluateStringExpression("${hello} ${place}")
+    * would be "Hello World".  The value of ${null} is null.
+    */
+    private String evaluateStringExpression(String expression) {
+        if (expression.trim().equals("${null}")) {
+            return null;
+        }
+        StringBuilder result = new StringBuilder();
+        int i0 = 0;
+        int i1;
+        while ((i1 = expression.indexOf("${", i0)) != -1) {
+            if ((i1 == 0) || ((i1 > 0) && (expression.charAt(i1 - 1) != '\\'))) {
+                int i2 = expression.indexOf("}", i1);
+                if ((i2 != -1) && (i2 > i1 + 2)) {
+                    String key = expression.substring(i1 + 2, i2);
+                    String value = getString(key);
+                    result.append(expression.substring(i0, i1));
+                    if (value != null) {
+                        result.append(value);
+                    } else {
+                        String msg = String.format("no value for \"%s\" in \"%s\"", key, expression);
+                        throw new LookupException(msg, key, String.class);
+                    }
+                    i0 = i2 + 1;  // skip trailing "}"
+                } else {
+                    String msg = String.format("no closing brace in \"%s\"", expression);
+                    throw new LookupException(msg, "<not found>", String.class);
+                }
+            } else {  // we've found an escaped variable - "\${"
+                result.append(expression.substring(i0, i1 - 1));
+                result.append("${");
+                i0 = i1 + 2; // skip past "${"
+            }
+        }
+        result.append(expression.substring(i0));
+        return result.toString();
     }
 }
