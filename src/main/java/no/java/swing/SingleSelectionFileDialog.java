@@ -121,44 +121,4 @@ public class SingleSelectionFileDialog {
         CANCEL,
         ERROR
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (SystemUtils.IS_OS_MAC_OSX) {
-                    try {
-                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    } catch (Exception e) {
-                        if (e instanceof RuntimeException) {
-                            throw (RuntimeException) e;
-                        }
-                        throw new RuntimeException(e);
-                    }
-                }
-                JFrame frame = new JFrame();
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setSize(800, 600);
-                JButton comp = new JButton(new AbstractAction("Click Me!!!") {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        SingleSelectionFileDialog dialog = new SingleSelectionFileDialog();
-                        Result result = dialog.showOpenDialog((Component) e.getSource());
-                        switch (result) {
-                            case APPROVE:
-                                File file = dialog.getSelectedFile();
-                                System.out.println("file = " + file);
-                                break;
-                            case CANCEL:
-                                break;
-                            case ERROR:
-                                break;
-                        }
-                    }
-                });
-                frame.getContentPane().add(comp);
-                frame.setVisible(true);
-            }
-        });
-    }
 }
