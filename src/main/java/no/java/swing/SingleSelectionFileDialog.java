@@ -20,11 +20,7 @@ import org.apache.commons.lang.SystemUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
@@ -130,6 +126,16 @@ public class SingleSelectionFileDialog {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                if (SystemUtils.IS_OS_MAC_OSX) {
+                    try {
+                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    } catch (Exception e) {
+                        if (e instanceof RuntimeException) {
+                            throw (RuntimeException) e;
+                        }
+                        throw new RuntimeException(e);
+                    }
+                }
                 JFrame frame = new JFrame();
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setSize(800, 600);
