@@ -16,9 +16,9 @@
 
 package no.java.swing.resource;
 
-import org.apache.commons.lang.SystemUtils;
-
 import javax.swing.KeyStroke;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 
 /**
  * @author Erlend Hamnaberg, Bouvet ASA
@@ -34,6 +34,7 @@ public class KeyStrokeResourceConverter implements ResourceConverter<KeyStroke> 
     }
 
     private String getPlatformSpecificShortCutKey() {
-        return SystemUtils.IS_OS_MAC_OSX ? "meta" : "ctrl";
+        int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        return mask == KeyEvent.META_MASK ? "meta" : "ctrl";
     }
 }
