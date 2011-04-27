@@ -25,12 +25,12 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.rmi.server.UID;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.net.URL;
 
 /**
  * A collection of Swing related utilities.
@@ -105,7 +105,7 @@ public class SwingHelper {
      * @param container   container to visit children of.
      * @param visitor     visitor callback.
      * @param includeRoot when <code>true</code>, the root container is also visited.
-     * @see SwingHelper#visitParents(java.awt.Component,no.java.swing.SwingHelper.ComponentVisitor,boolean)
+     * @see SwingHelper#visitParents(java.awt.Component, no.java.swing.SwingHelper.ComponentVisitor, boolean)
      */
     public static void visitChildren(final Container container, final ComponentVisitor visitor, final boolean includeRoot) {
         if (includeRoot) {
@@ -113,7 +113,7 @@ public class SwingHelper {
         }
         for (Component component : container.getComponents()) {
             if (component instanceof Container) {
-                visitChildren((Container)component, visitor, true);
+                visitChildren((Container) component, visitor, true);
             } else {
                 visitor.visit(component);
             }
@@ -126,7 +126,7 @@ public class SwingHelper {
      * @param container   container to visit ancestors of.
      * @param visitor     visitor callback.
      * @param includeRoot when <code>true</code>, the root container is also visited.
-     * @see SwingHelper#visitChildren(java.awt.Container,no.java.swing.SwingHelper.ComponentVisitor,boolean)
+     * @see SwingHelper#visitChildren(java.awt.Container, no.java.swing.SwingHelper.ComponentVisitor, boolean)
      */
     public static void visitParents(final Component container, final ComponentVisitor visitor, final boolean includeRoot) {
         if (includeRoot) {
@@ -188,11 +188,11 @@ public class SwingHelper {
     }
 
     public static void enableAA(final Graphics graphics) {
-        ((Graphics2D)graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     public static void setAlpha(final Graphics graphics, final float alpha) {
-        ((Graphics2D)graphics).setComposite(AlphaComposite.SrcOver.derive(alpha));
+        ((Graphics2D) graphics).setComposite(AlphaComposite.SrcOver.derive(alpha));
     }
 
     public static String getDocumentText(final Document document) {
@@ -204,61 +204,60 @@ public class SwingHelper {
     }
 
 
-  /**
-   * Reads an icon resource from the class path.
-   * <p/>
-   * The icon is read using the default <tt>ClassLoader</tt>. Only absolute
-   * paths are used.
-   *
-   * @param pPath the path to the icon resource.
-   * @return an <tt>Icon</tt> containing the image at the given path
-   * @throws IllegalArgumentException if <tt>pPath</tt> is empty or no image is
-   *                                  found at the path.
-   * @see #readIcon(String,Class)
-   */
-  public static Icon readIcon(final String pPath) {
-    return readIcon(pPath, null);
-  }
-
-  /**
-   * Reads an icon resource from the class path.
-   * <p/>
-   * The icon is read using the <tt>ClassLoader</tt> of the <tt>pRelativeTo</tt>
-   * parameter if given. The path may be relative to (in the same package as)
-   * the given class, or absolute (relative to the class path root). The path is
-   * considered absolute if it starts with a '/'. If <tt>pRelativeTo</tt> is
-   * <tt>null</tt>, only absolute paths are used.
-   *
-   * @param pPath       the path to the icon resource, may be absolute or
-   *                    relative to the <tt>pRelativeTo</tt> parameter.
-   * @param pRelativeTo the <tt>Class</tt> to get the resource from, or
-   *                    <tt>null</tt>.
-   * @return an <tt>Icon</tt> containing the image at the given path
-   * @throws IllegalArgumentException if <tt>pPath</tt> is empty or no image is
-   *                                  found at the path.
-   */
-  public static <T> Icon readIcon(final String pPath, final Class<T> pRelativeTo) {
-    Validate.notEmpty(pPath, "Path can not be empty.");
-
-    URL resource;
-
-    // TODO: Either be lenient (like now), or disallow relative paths if relativeTo == null
-    // TODO: Consider defaulting to the context classloader?
-
-    if (pRelativeTo != null) {
-      // Relative to the class object passed in. Leading '/' allowed
-      resource = pRelativeTo.getResource(pPath);
-    }
-    else {
-      // This is always relative to root, so we can safely strip off leading '/'
-      String path = pPath.startsWith("/") ? pPath.substring(1) : pPath;
-      resource = SwingHelper.class.getClassLoader().getResource(path);
+    /**
+     * Reads an icon resource from the class path.
+     * <p/>
+     * The icon is read using the default <tt>ClassLoader</tt>. Only absolute
+     * paths are used.
+     *
+     * @param pPath the path to the icon resource.
+     * @return an <tt>Icon</tt> containing the image at the given path
+     * @throws IllegalArgumentException if <tt>pPath</tt> is empty or no image is
+     *                                  found at the path.
+     * @see #readIcon(String, Class)
+     */
+    public static Icon readIcon(final String pPath) {
+        return readIcon(pPath, null);
     }
 
-    Validate.notNull(resource, "No icon found for path: \"" + pPath + "\"");
+    /**
+     * Reads an icon resource from the class path.
+     * <p/>
+     * The icon is read using the <tt>ClassLoader</tt> of the <tt>pRelativeTo</tt>
+     * parameter if given. The path may be relative to (in the same package as)
+     * the given class, or absolute (relative to the class path root). The path is
+     * considered absolute if it starts with a '/'. If <tt>pRelativeTo</tt> is
+     * <tt>null</tt>, only absolute paths are used.
+     *
+     * @param pPath       the path to the icon resource, may be absolute or
+     *                    relative to the <tt>pRelativeTo</tt> parameter.
+     * @param pRelativeTo the <tt>Class</tt> to get the resource from, or
+     *                    <tt>null</tt>.
+     * @return an <tt>Icon</tt> containing the image at the given path
+     * @throws IllegalArgumentException if <tt>pPath</tt> is empty or no image is
+     *                                  found at the path.
+     */
+    public static <T> Icon readIcon(final String pPath, final Class<T> pRelativeTo) {
+        Validate.notEmpty(pPath, "Path can not be empty.");
 
-    return new ImageIcon(resource);
-  }
+        URL resource;
+
+        // TODO: Either be lenient (like now), or disallow relative paths if relativeTo == null
+        // TODO: Consider defaulting to the context classloader?
+
+        if (pRelativeTo != null) {
+            // Relative to the class object passed in. Leading '/' allowed
+            resource = pRelativeTo.getResource(pPath);
+        } else {
+            // This is always relative to root, so we can safely strip off leading '/'
+            String path = pPath.startsWith("/") ? pPath.substring(1) : pPath;
+            resource = SwingHelper.class.getClassLoader().getResource(path);
+        }
+
+        Validate.notNull(resource, "No icon found for path: \"" + pPath + "\"");
+
+        return new ImageIcon(resource);
+    }
 
     public static JLabel createLabel(final String textWithMnemonic, final JComponent labelForComponent) {
         TextWithMnemonic parsedTextWithMnemonic = new TextWithMnemonic(textWithMnemonic);
@@ -273,20 +272,11 @@ public class SwingHelper {
         return label;
     }
 
-    public static JLabel createSAFLabel(final String name, final JComponent labelForComponent) {
-        JLabel label = new JLabel();
-        label.setName(name);
-        if (labelForComponent != null) {
-            label.setLabelFor(labelForComponent);
-        }
-        return label;
-    }
-
     /**
      * Visitor callback used by the <em>visitor</em> methods.
      *
-     * @see SwingHelper#visitParents(java.awt.Component,no.java.swing.SwingHelper.ComponentVisitor,boolean)
-     * @see SwingHelper#visitChildren(java.awt.Container,no.java.swing.SwingHelper.ComponentVisitor,boolean)
+     * @see SwingHelper#visitParents(java.awt.Component, no.java.swing.SwingHelper.ComponentVisitor, boolean)
+     * @see SwingHelper#visitChildren(java.awt.Container, no.java.swing.SwingHelper.ComponentVisitor, boolean)
      */
     public interface ComponentVisitor {
         void visit(final Component component);
