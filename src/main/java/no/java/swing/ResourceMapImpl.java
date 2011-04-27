@@ -66,7 +66,7 @@ class ResourceMapImpl implements ResourceMap {
         if (containsKey(key)) {
             ResourceConverter<T> converter = findConverter(type);
             if (converter == null) {
-                throw new ResourceConversionException("No Converter found for " + type);
+                throw new ResourceConversionException("No Converter found for " + type.getName());
             }
             String value = bundle.getString(key);
             if (!StringUtils.isBlank(value)) {
