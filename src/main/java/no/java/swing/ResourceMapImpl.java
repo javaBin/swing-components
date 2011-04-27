@@ -40,6 +40,8 @@ class ResourceMapImpl implements ResourceMap {
         converterMap.put(Color.class, new ColorResourceConverter());
         converterMap.put(KeyStroke.class, new KeyStrokeResourceConverter());
         converterMap.put(String.class, new StringResourceConverter());
+        converterMap.put(Icon.class, new IconResourceConverter());
+        converterMap.put(ImageIcon.class, new IconResourceConverter());
     }
 
     ResourceMapImpl(ResourceBundle bundle) {
