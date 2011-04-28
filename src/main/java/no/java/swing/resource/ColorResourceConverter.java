@@ -16,24 +16,34 @@
 
 package no.java.swing.resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.awt.Color;
 
 /**
-* @author Erlend Hamnaberg, Bouvet ASA
-*/
+ * @author Erlend Hamnaberg, Bouvet ASA
+ */
 public class ColorResourceConverter implements ResourceConverter<Color> {
     @Override
     public Color convert(String value) {
-        String[] split = value.split(",");
-        if (split.length != 3) {
-            throw new ResourceConversionException("Cannot convert from a None RGB color, value was " + value);
+        if (value.startsWith("#") || StringUtils.isNumeric(value)) {
+            try {
+                return Color.decode(value);
+            } catch (NumberFormatException e) {
+                throw new ResourceConversionException(e);
+            }
+        } else if (value.contains(",")) {
+            String[] split = value.split(",");
+            if (split.length != 3) {
+                throw new ResourceConversionException("Cannot convert from a None RGB color, value was " + value);
+            }
+            try {
+                return new Color(NumberUtils.toInt(split[0], -1), NumberUtils.toInt(split[1], -1), NumberUtils.toInt(split[2], -1));
+            } catch (IllegalArgumentException e) {
+                throw new ResourceConversionException(e);
+            }
         }
-        try {
-            return new Color(NumberUtils.toInt(split[0]), NumberUtils.toInt(split[1]), NumberUtils.toInt(split[2]));
-        } catch (NumberFormatException e) {
-            throw new ResourceConversionException(e);
-        }
+        throw new ResourceConversionException("Unrecognized Color format " + value);
     }
 }
