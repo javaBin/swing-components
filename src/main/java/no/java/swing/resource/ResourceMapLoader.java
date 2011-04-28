@@ -1,4 +1,4 @@
-package no.java.swing;
+package no.java.swing.resource;
 
 import java.util.*;
 
@@ -11,17 +11,17 @@ import java.util.*;
  */
 public final class ResourceMapLoader {
     protected static final Locale NO_LOCALE = new Locale("", "");
-    private Map<String, Map<Locale, ResourceMap>> resources = Collections.synchronizedMap(new HashMap<String, Map<Locale, ResourceMap>>());
+    private static Map<String, Map<Locale, ResourceMap>> resources = Collections.synchronizedMap(new HashMap<String, Map<Locale, ResourceMap>>());
 
-    public ResourceMap getDefault() {
+    public static ResourceMap getDefault() {
         return getResourceMap(ResourceBundleLoader.getBundleName(), Locale.getDefault());
     }
 
-    public ResourceMap getResourceMap(Class clazz, Locale locale) {
+    public static ResourceMap getResourceMap(Class clazz, Locale locale) {
         return getResourceMap(clazz.getName(), locale);
     }
 
-    public ResourceMap getResourceMap(String name, Locale locale) {
+    public static ResourceMap getResourceMap(String name, Locale locale) {
         if (locale == null) {
             locale = NO_LOCALE;
         }
@@ -37,7 +37,7 @@ public final class ResourceMapLoader {
         return loadFromBundle(name, locale, values);
     }
 
-    private ResourceMap loadFromBundle(String name, Locale locale, Map<Locale, ResourceMap> values) {
+    private static ResourceMap loadFromBundle(String name, Locale locale, Map<Locale, ResourceMap> values) {
         ResourceMap map = null;
         if (locale == NO_LOCALE) {
             ResourceBundle bundle = ResourceBundle.getBundle(name);

@@ -15,10 +15,10 @@
 
 package no.java.swing;
 
+import no.java.swing.resource.ResourceMap;
 import org.apache.commons.lang.Validate;
 
 import javax.swing.*;
-import java.util.ResourceBundle;
 
 /**
  * Utility methods for configuring
@@ -34,53 +34,44 @@ public class ConfigurationUtil {
     /**
      * Configures the action with name, icon etc, from the the given resource bundle.
      *
-     * @param pAction         the pAction to be configured.
-     * @param pActionId       root name used for looking up properties in the resource bundles.
-     * @param pResourceBundle resource bundle use to look up values.
+     * @param action      the pAction to be configured.
+     * @param actionId    root name used for looking up properties in the resource bundles.
+     * @param resourceMap resource bundle use to look up values.
      */
-    public static void configureAction(Action pAction, String pActionId, ResourceBundle pResourceBundle) {
+    public static void configureAction(Action action, String actionId, ResourceMap resourceMap) {
 
-        Validate.notNull(pAction, "Action can not be null");
-        Validate.notEmpty(pActionId, "ActionId can not be empty");
-        Validate.notNull(pResourceBundle, "ResourceBundle can not be null");
+        Validate.notNull(action, "Action can not be null");
+        Validate.notEmpty(actionId, "ActionId can not be empty");
+        Validate.notNull(resourceMap, "ResourceBundle can not be null");
 
-        String textWithMnemonicKey = pActionId + ".name";
-        String acceleratorKey = pActionId + ".accelerator";
-        String descriptionKey = pActionId + ".description";
-        String iconKey = pActionId + ".icon";
+        String textWithMnemonicKey = actionId + ".name";
+        String acceleratorKey = actionId + ".accelerator";
+        String descriptionKey = actionId + ".description";
+        String iconKey = actionId + ".icon";
 
-        if (pResourceBundle.containsKey(textWithMnemonicKey)) {
-            String textWithMnemonicString = pResourceBundle.getString(textWithMnemonicKey).trim();
+        if (resourceMap.containsKey(textWithMnemonicKey)) {
+            String textWithMnemonicString = resourceMap.getString(textWithMnemonicKey).trim();
             if (!textWithMnemonicString.isEmpty()) {
                 TextWithMnemonic textWithMnemonic = new TextWithMnemonic(textWithMnemonicString);
-                configureAction(pAction, textWithMnemonic);
+                configureAction(action, textWithMnemonic);
             }
         }
 
-        if (pResourceBundle.containsKey(acceleratorKey)) {
-            String acceleratorString = pResourceBundle.getString(acceleratorKey).trim();
-            if (!acceleratorString.isEmpty()) {
-                KeyStroke keyStroke = KeyStroke.getKeyStroke(acceleratorString);
-                if (keyStroke == null) {
-                    throw new IllegalArgumentException("Illegal accelerator: " + acceleratorString);
-                }
-                pAction.putValue(Action.ACCELERATOR_KEY, keyStroke);
-            }
+        if (resourceMap.containsKey(acceleratorKey)) {
+            KeyStroke keyStroke = resourceMap.getKeyStroke(acceleratorKey);
+            action.putValue(Action.ACCELERATOR_KEY, keyStroke);
         }
 
-        if (pResourceBundle.containsKey(descriptionKey)) {
-            String descriptionValue = pResourceBundle.getString(descriptionKey).trim();
+        if (resourceMap.containsKey(descriptionKey)) {
+            String descriptionValue = resourceMap.getString(descriptionKey).trim();
             if (!descriptionValue.isEmpty()) {
-                pAction.putValue(Action.SHORT_DESCRIPTION, descriptionValue);
+                action.putValue(Action.SHORT_DESCRIPTION, descriptionValue);
             }
         }
 
-        if (pResourceBundle.containsKey(iconKey)) {
-            String iconPath = pResourceBundle.getString(iconKey).trim();
-            if (!iconPath.isEmpty()) {
-                Icon icon = SwingHelper.readIcon(iconPath);
-                pAction.putValue(Action.SMALL_ICON, icon);
-            }
+        if (resourceMap.containsKey(iconKey)) {
+            Icon icon = resourceMap.getIcon(iconKey);
+            action.putValue(Action.SMALL_ICON, icon);
         }
 
     }
@@ -88,16 +79,16 @@ public class ConfigurationUtil {
     /**
      * Sets the text and mnemonic of an action as specified by the provided {@link no.java.swing.TextWithMnemonic}.
      *
-     * @param pAction           the action to be configured. May not be {@code null}.
-     * @param pTextWithMnemonic the text with mnemonic. May not be {@code null}.
+     * @param action           the action to be configured. May not be {@code null}.
+     * @param textWithMnemonic the text with mnemonic. May not be {@code null}.
      */
-    public static void configureAction(Action pAction, TextWithMnemonic pTextWithMnemonic) {
-        Validate.notNull(pAction, "Action may not be null");
-        Validate.notNull(pTextWithMnemonic, "TextWithMnemonic may not be null");
-        pAction.putValue(Action.NAME, pTextWithMnemonic.getTextWithoutMnemonic());
-        if (pTextWithMnemonic.getMnemonic() != null) {
-            pAction.putValue(Action.MNEMONIC_KEY, pTextWithMnemonic.getMnemonic());
-            pAction.putValue(Action.DISPLAYED_MNEMONIC_INDEX_KEY, pTextWithMnemonic.getMnemonicIndex());
+    public static void configureAction(Action action, TextWithMnemonic textWithMnemonic) {
+        Validate.notNull(action, "Action may not be null");
+        Validate.notNull(textWithMnemonic, "TextWithMnemonic may not be null");
+        action.putValue(Action.NAME, textWithMnemonic.getTextWithoutMnemonic());
+        if (textWithMnemonic.getMnemonic() != null) {
+            action.putValue(Action.MNEMONIC_KEY, textWithMnemonic.getMnemonic());
+            action.putValue(Action.DISPLAYED_MNEMONIC_INDEX_KEY, textWithMnemonic.getMnemonicIndex());
         }
     }
 }

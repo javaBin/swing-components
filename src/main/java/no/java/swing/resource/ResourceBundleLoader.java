@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.java.swing;
+package no.java.swing.resource;
 
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;

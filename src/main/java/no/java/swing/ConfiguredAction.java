@@ -15,6 +15,8 @@
 
 package no.java.swing;
 
+import no.java.swing.resource.ResourceMap;
+
 import javax.swing.AbstractAction;
 import java.util.ResourceBundle;
 
@@ -37,10 +39,10 @@ public abstract class ConfiguredAction extends AbstractAction {
      * Creates and configures a new action using the provided resource map.
      *
      * @param basename       base name used for resource map lookups. May not be {@code null}.
-     * @param resourceBundle resource map used to look up values. May not be {@code null}.
+     * @param resourceMap resource map used to look up values. May not be {@code null}.
      * @throws IllegalArgumentException if pBaseName or pResourceMap == {@code null}.
      */
-    protected ConfiguredAction(final String basename, final ResourceBundle resourceBundle) {
-        ConfigurationUtil.configureAction(this, basename, resourceBundle);
+    protected ConfiguredAction(final String basename, final ResourceMap resourceMap) {
+        ConfigurationUtil.configureAction(this, basename, resourceMap);
     }
 }

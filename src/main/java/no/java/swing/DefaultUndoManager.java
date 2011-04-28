@@ -16,6 +16,10 @@
 package no.java.swing;
 
 
+import no.java.swing.resource.ResourceBundleLoader;
+import no.java.swing.resource.ResourceMap;
+import no.java.swing.resource.ResourceMapLoader;
+
 import javax.swing.*;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -48,9 +52,9 @@ public final class DefaultUndoManager extends UndoManager {
     private boolean undoingOrRedoing;
 
     private DefaultUndoManager() {
-        ResourceBundle bundle = ResourceBundleLoader.load();
-        undoAction = new UndoAction(bundle);
-        redoAction = new RedoAction(bundle);
+        ResourceMap resourceMap = ResourceMapLoader.getDefault();
+        undoAction = new UndoAction(resourceMap);
+        redoAction = new RedoAction(resourceMap);
         updateUndoRedoActionStates();
     }
 
@@ -124,8 +128,8 @@ public final class DefaultUndoManager extends UndoManager {
 
     private class UndoAction extends ConfiguredAction {
 
-        public UndoAction(ResourceBundle bundle) {
-            super("undo", bundle);
+        public UndoAction(ResourceMap resourceMap) {
+            super("undo", resourceMap);
         }
 
         public void actionPerformed(final ActionEvent event) {
@@ -138,8 +142,8 @@ public final class DefaultUndoManager extends UndoManager {
 
     private class RedoAction extends ConfiguredAction {
 
-        public RedoAction(ResourceBundle bundle) {
-            super("redo", bundle);
+        public RedoAction(ResourceMap resourceMap) {
+            super("redo", resourceMap);
         }
 
         public void actionPerformed(final ActionEvent event) {
