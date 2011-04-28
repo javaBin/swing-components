@@ -149,33 +149,33 @@ class ResourceMapImpl implements ResourceMap {
             return null;
         }
         StringBuilder result = new StringBuilder();
-        int i0 = 0;
-        int i1;
-        while ((i1 = expression.indexOf("${", i0)) != -1) {
-            if ((i1 == 0) || ((i1 > 0) && (expression.charAt(i1 - 1) != '\\'))) {
-                int i2 = expression.indexOf("}", i1);
-                if ((i2 != -1) && (i2 > i1 + 2)) {
-                    String key = expression.substring(i1 + 2, i2);
+        int startIndex = 0;
+        int endIndex;
+        while ((endIndex = expression.indexOf("${", startIndex)) != -1) {
+            if ((endIndex == 0) || ((endIndex > 0) && (expression.charAt(endIndex - 1) != '\\'))) {
+                int expressionEnd = expression.indexOf("}", endIndex);
+                if ((expressionEnd != -1) && (expressionEnd > endIndex + 2)) {
+                    String key = expression.substring(endIndex + 2, expressionEnd);
                     String value = getString(key);
-                    result.append(expression.substring(i0, i1));
+                    result.append(expression.substring(startIndex, endIndex));
                     if (value != null) {
                         result.append(value);
                     } else {
                         String msg = String.format("no value for \"%s\" in \"%s\"", key, expression);
                         throw new LookupException(msg, key, String.class);
                     }
-                    i0 = i2 + 1;  // skip trailing "}"
+                    startIndex = expressionEnd + 1;  // skip trailing "}"
                 } else {
                     String msg = String.format("no closing brace in \"%s\"", expression);
                     throw new LookupException(msg, "<not found>", String.class);
                 }
             } else {  // we've found an escaped variable - "\${"
-                result.append(expression.substring(i0, i1 - 1));
+                result.append(expression.substring(startIndex, endIndex - 1));
                 result.append("${");
-                i0 = i1 + 2; // skip past "${"
+                startIndex = endIndex + 2; // skip past "${"
             }
         }
-        result.append(expression.substring(i0));
+        result.append(expression.substring(startIndex));
         return result.toString();
     }
 }
