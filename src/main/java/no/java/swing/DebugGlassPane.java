@@ -16,6 +16,9 @@
 package no.java.swing;
 
 import com.jgoodies.forms.factories.Borders;
+import no.java.swing.resource.ResourceBundleLoader;
+import no.java.swing.resource.ResourceMap;
+import no.java.swing.resource.ResourceMapLoader;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -142,7 +145,7 @@ public class DebugGlassPane extends JComponent implements AWTEventListener {
     private class ToggleGlassPaneAction extends AbstractAction {
 
         private ToggleGlassPaneAction() {
-            KeyStroke keyStroke = KeyStroke.getKeyStroke(ResourceBundleLoader.load().getString("DebugGlassPane.keyStroke"));
+            KeyStroke keyStroke = ResourceMapLoader.getDefault().getKeyStroke("DebugGlassPane.keyStroke");
             if (keyStroke == null) {
                 keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_F10, KeyEvent.SHIFT_DOWN_MASK);
             }

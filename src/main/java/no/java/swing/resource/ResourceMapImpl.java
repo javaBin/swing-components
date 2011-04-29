@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package no.java.swing;
+package no.java.swing.resource;
 
-import no.java.swing.resource.*;
+import no.java.swing.TextWithMnemonic;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
@@ -42,6 +42,7 @@ class ResourceMapImpl implements ResourceMap {
         converterMap.put(String.class, new StringResourceConverter());
         converterMap.put(Icon.class, new IconResourceConverter());
         converterMap.put(ImageIcon.class, new IconResourceConverter());
+        converterMap.put(TextWithMnemonic.class, new TextWithMnemonicResourceConverter());
     }
 
     ResourceMapImpl(ResourceBundle bundle) {
@@ -86,7 +87,15 @@ class ResourceMapImpl implements ResourceMap {
     @Override
     public final String getString(String key, Object... args) {
         String value = getObject(key, String.class);
+        if (value == null) {
+            return "";
+        }
         return String.format(value, args);
+    }
+
+    @Override
+    public TextWithMnemonic getTextWithMnemonic(String key) {
+        return getObject(key, TextWithMnemonic.class);
     }
 
     @Override

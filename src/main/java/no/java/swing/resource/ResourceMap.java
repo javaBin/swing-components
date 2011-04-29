@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package no.java.swing;
+package no.java.swing.resource;
+
+import no.java.swing.TextWithMnemonic;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -35,6 +37,8 @@ public interface ResourceMap {
     <T> T getObject(String key, Class<T> type);
 
     String getString(String key, Object... args);
+
+    TextWithMnemonic getTextWithMnemonic(String key);
 
     Boolean getBoolean(String key);
 
